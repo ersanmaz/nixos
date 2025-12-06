@@ -1,0 +1,4 @@
+.idea
+configuration.nix.bck
+hardware-configuration.nix
+home-manager.nix
