@@ -213,21 +213,39 @@ in
       setopt AUTO_CD             # Change directory just by typing the name
       
       # Set history options (Equivalent to ignoreAllDups = true)
+      setopt HIST_FIND_NO_DUPS
       setopt HIST_IGNORE_ALL_DUPS
-      setopt HIST_SAVE_NO_DUPS # Important: ensures no duplicates are saved to the file
-      setopt APPEND_HISTORY     # Append to the history file, don't overwrite
-      setopt SHARE_HISTORY      # Share history among all open shells
+      setopt HIST_SAVE_NO_DUPS          # Important: ensures no duplicates are saved to the file
+      setopt APPEND_HISTORY             # Append to the history file, don't overwrite
+      setopt SHARE_HISTORY              # Share history among all open shells
+      setopt HIST_REDUCE_BLANKS
+      setopt INC_APPEND_HISTORY
       
       # Set environment variables
       export EDITOR="vim"
       export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/ersan/.local/share/flatpak/exports/share
 
+      # Remove redundant/conflicting bindings
+      bindkey -r "^[n"
+      bindkey -r "^[p"
+      bindkey -r "^[[P"
+      bindkey -r "^[[Q"
+      bindkey -r "^[[R"
+      bindkey -r "^[[S"
+
+      bindkey -e
+
       # Move cursor by word like in Bash
       bindkey '^[[1;5C' forward-word      # Ctrl + Right
       bindkey '^[[1;5D' backward-word     # Ctrl + Left
 
-      # Ctrl+R opens interactive fuzzy history
-      bindkey '^R' history-incremental-search-backward
+      # Fish-style up/down arrow history search
+      bindkey "^[OA" history-search-backward
+      bindkey "^[OB" history-search-forward
+      bindkey "^[[A" history-search-backward
+      bindkey "^[[B" history-search-forward
+
+      bindkey "^I" complete-word
 
       ###################################################
       # Fish-like TAB completion menu                   #
@@ -243,7 +261,10 @@ in
         "m:{a-zA-Z}={A-Za-z}" \
         "r:|[._-]=* r:|=*"
 
-      bindkey "^I" complete-word
+      # Ctrl-R incremental search (fzf widget)
+      if [ -f "${pkgs.fzf}/share/fzf/key-bindings.zsh" ]; then
+        source "${pkgs.fzf}/share/fzf/key-bindings.zsh"
+      fi
     '';
 
     # --- Aliases ---
