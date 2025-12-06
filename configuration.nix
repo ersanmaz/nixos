@@ -154,8 +154,6 @@ in
     zsh-powerlevel10k
     zsh-autosuggestions
     zsh-syntax-highlighting
-    zsh-you-should-use
-	zsh-autocomplete
     meslo-lgs-nf
     unzip
     openssl
@@ -169,6 +167,7 @@ in
     k9s
     helm
     fzf
+    fish
     zellij
     unzip
     gnutar
@@ -194,8 +193,14 @@ in
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    #autosuggestions.enable = true;
+    autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
+
+    # Powerlevel10k (optional)
+    promptInit = ''
+      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+      [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+    '';
 
     interactiveShellInit = ''
       # Set up history size
@@ -217,41 +222,28 @@ in
       export EDITOR="vim"
       export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/ersan/.local/share/flatpak/exports/share
 
-	  # Instant prompt
-      if [[ -r "$HOME/.zshrc.pre-p10k" ]]; then
-      	source "$HOME/.zshrc.pre-p10k"
-      fi
+      # Move cursor by word like in Bash
+      bindkey '^[[1;5C' forward-word      # Ctrl + Right
+      bindkey '^[[1;5D' backward-word     # Ctrl + Left
 
-      # Load p10k if configuration file exists
-      if [[ -f "$HOME/.p10k.zsh" ]]; then
-      	source "$HOME/.p10k.zsh"
-	  else
-        # Load default P10K theme from Nix store
-      	source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
-      fi
+      # Ctrl+R opens interactive fuzzy history
+      bindkey '^R' history-incremental-search-backward
 
-      # you-should-use (Path may need adjustment, check the package contents in Nixpkgs)
-      source ${pkgs.zsh-you-should-use}/share/zsh/plugins/you-should-use/you-should-use.plugin.zsh
+      ###################################################
+      # Fish-like TAB completion menu                   #
+      ###################################################
 
-	  # zsh-autocomplete  (MUST BE LOADED LAST)
-      source ${pkgs.zsh-autocomplete}/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+      zstyle ":completion:*" menu yes select
+      zstyle ":completion:*" verbose yes
+      zstyle ":completion:*" group-name ""
+      zstyle ":completion:*:descriptions" format "%F{yellow}%d%f"
+      zstyle ":completion:*" list-colors ""
 
-	  # Force restore NORMAL arrow key behavior
-	  bindkey -r '^[[C'
-	  bindkey -r '^[[D'
-	  bindkey -r '^[[A'
-	  bindkey -r '^[[B'
+      zstyle ":completion:*" matcher-list \
+        "m:{a-zA-Z}={A-Za-z}" \
+        "r:|[._-]=* r:|=*"
 
-	  # Restore normal arrow key behavior (zsh-autocomplete override)
-	  bindkey '^[[A' up-line-or-history
-	  bindkey '^[[B' down-line-or-history
-	  bindkey '^[[C' forward-char
-	  bindkey '^[[D' backward-char
-
-	  # Move cursor by word like in Bash
-	  bindkey '^[[1;5C' forward-word      # Ctrl + Right
-	  bindkey '^[[1;5D' backward-word     # Ctrl + Left
-
+      bindkey "^I" complete-word
     '';
 
     # --- Aliases ---
@@ -264,7 +256,6 @@ in
 
   system.userActivationScripts.createEmptyZshrc = ''
     echo 'source /etc/zshrc' > $HOME/.zshrc
-	printf '# Load p10k if configuration file exists\nif [[ -f "$HOME/.p10k.zsh" ]]; then\n    source "$HOME/.p10k.zsh"\nfi\n' >> "$HOME/.zshrc"
     chmod 644 $HOME/.zshrc
   '';
 
