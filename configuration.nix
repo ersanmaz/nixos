@@ -157,8 +157,13 @@ in
     meslo-lgs-nf
     unzip
     openssl
+    dconf
     gnome-tweaks
     gnome-terminal
+    papirus-icon-theme
+    tela-icon-theme
+    yaru-theme
+    libgtop
     vscode
     jetbrains.idea-ultimate
     google-chrome
