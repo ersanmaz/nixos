@@ -78,8 +78,8 @@ in
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -116,7 +116,7 @@ in
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
-      (vim_configurable.customize {
+      (vim-full.customize {
         name = "vim";
         vimrcConfig.customRC = ''
           set number            " Enable line numbers
@@ -139,7 +139,11 @@ in
   nixpkgs.config.allowUnfree = true;
 
   # Enable flakes + new nix commands
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  #nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "qtwebengine-5.15.19"
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
