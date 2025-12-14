@@ -173,6 +173,7 @@ in
     meslo-lgs-nf
     unzip
     openssl
+    tilix
     dconf
     gnome-tweaks
     gnome-terminal
