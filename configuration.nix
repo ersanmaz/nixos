@@ -284,11 +284,28 @@ in
 
   };
 
-  system.userActivationScripts.createEmptyZshrc = ''
-    echo 'source /etc/zshrc' > $HOME/.zshrc
-    chmod 644 $HOME/.zshrc
-  '';
+  system.userActivationScripts = {
+    createEmptyZshrc = ''
+      echo 'source /etc/zshrc' > $HOME/.zshrc
+      chmod 644 $HOME/.zshrc
+    '';
 
+    sshKey = ''
+      SSH_DIR=$HOME/.ssh
+      KEY_PATH=$SSH_DIR/id_ed25519
+      SSH_KEYGEN=${pkgs.openssh}/bin/ssh-keygen
+
+      mkdir -p $SSH_DIR
+      chmod 700 $SSH_DIR
+
+      # Generate key if it doesn't exist
+      if [ ! -f $KEY_PATH ]; then
+        $SSH_KEYGEN -t ed25519 -C "ersanmaz@gmail.com" -f $KEY_PATH -N ""
+        chmod 600 $KEY_PATH
+        chmod 644 $KEY_PATH.pub
+      fi
+    '';
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
