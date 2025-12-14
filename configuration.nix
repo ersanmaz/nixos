@@ -176,10 +176,13 @@ in
     dconf
     gnome-tweaks
     gnome-terminal
-    papirus-icon-theme
-    tela-icon-theme
-    yaru-theme
     libgtop
+    libgtop.dev
+    gobject-introspection
+    gnomeExtensions.user-themes
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.system-monitor-next
+    papirus-icon-theme
     vscode
     jetbrains.idea-ultimate
     google-chrome
