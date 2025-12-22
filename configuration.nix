@@ -179,6 +179,8 @@ in
     gnome-terminal
     libgtop
     libgtop.dev
+    desktop-file-utils
+    gnome-network-displays
     gobject-introspection
     gnomeExtensions.user-themes
     gnomeExtensions.dash-to-dock
