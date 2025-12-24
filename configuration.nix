@@ -208,6 +208,7 @@ in
     vlc
     wl-clipboard
     flatpak
+    podman-compose
   ];
 
   # Podman
@@ -215,6 +216,10 @@ in
     enable = true;
     dockerCompat = true;
     autoPrune.enable = true;
+  };
+
+  environment.sessionVariables = {
+    DOCKER_HOST = "unix:///run/user/1000/podman/podman.sock";
   };
 
   programs.zsh = {
