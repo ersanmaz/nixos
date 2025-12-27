@@ -209,6 +209,7 @@ in
     wl-clipboard
     flatpak
     podman-compose
+    step-cli
   ];
 
   # Podman
