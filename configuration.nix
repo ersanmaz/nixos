@@ -232,6 +232,8 @@ in
     openjdk25
     openjdk21
     openjdk17
+    direnv
+    nix-direnv
   ];
 
   # Podman
@@ -320,6 +322,8 @@ in
       if [ -f "${pkgs.fzf}/share/fzf/key-bindings.zsh" ]; then
         source "${pkgs.fzf}/share/fzf/key-bindings.zsh"
       fi
+
+      eval "$(direnv hook zsh)"
     '';
 
     # --- Aliases ---
