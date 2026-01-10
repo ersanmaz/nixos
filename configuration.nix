@@ -149,6 +149,24 @@ in
   # Install firefox.
   programs.firefox.enable = true;
 
+  # Enable nix-ld to run unpatched binaries (like those from JetBrains Toolbox)
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    # 1. The specific fix for UnsatisfiedLinkError
+    xorg.libXext
+    xorg.libX11
+    xorg.libXrender
+    xorg.libXi
+    xorg.libXtst
+
+    # 2. Minimal system & hardware integration
+    stdenv.cc.cc       # Standard C++ library (crucial for almost all binaries)
+    libz               # Compression used by many plugins/caches
+    freetype           # Font rendering
+    fontconfig         # Font management
+    libglvnd           # OpenGL support (needed for smooth UI)
+  ];
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -190,7 +208,7 @@ in
     gnomeExtensions.system-monitor-next
     papirus-icon-theme
     vscode
-    jetbrains.idea
+    jetbrains-toolbox
     google-chrome
     ntfs3g
     #stremio
