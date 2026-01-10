@@ -12,7 +12,7 @@ in
 
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix      
+      ./hardware-configuration.nix
     ];
 
   # Bootloader.
@@ -49,10 +49,11 @@ in
   # If using NixOS configuration.nix
   system.activationScripts.jdk-links = {
     text = ''
-      mkdir -p /home/ersan/.jdks
-      ln -sfn ${pkgs.openjdk17} /home/ersan/.jdks/openjdk17
-      ln -sfn ${pkgs.openjdk21} /home/ersan/.jdks/openjdk21
-      ln -sfn ${pkgs.openjdk25} /home/ersan/.jdks/openjdk25
+      # Using ${user} to define home directory paths
+      mkdir -p /home/${user}/.jdks
+      ln -sfn ${pkgs.openjdk17} /home/${user}/.jdks/openjdk17
+      ln -sfn ${pkgs.openjdk21} /home/${user}/.jdks/openjdk21
+      ln -sfn ${pkgs.openjdk25} /home/${user}/.jdks/openjdk25
     '';
   };
 
@@ -131,7 +132,7 @@ in
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${user} = {
     isNormalUser = true;
-    description = "ersan";
+    description = "${user}"; # Dynamically set description
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
@@ -268,7 +269,7 @@ in
       HISTFILE="$HOME/.zsh_history"
 
       setopt AUTO_CD             # Change directory just by typing the name
-      
+
       # Set history options (Equivalent to ignoreAllDups = true)
       setopt HIST_FIND_NO_DUPS
       setopt HIST_IGNORE_ALL_DUPS
@@ -277,10 +278,11 @@ in
       setopt SHARE_HISTORY              # Share history among all open shells
       setopt HIST_REDUCE_BLANKS
       setopt INC_APPEND_HISTORY
-      
+
       # Set environment variables
       export EDITOR="vim"
-      export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/ersan/.local/share/flatpak/exports/share
+      # Updated Flatpak path to use ${user}
+      export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/${user}/.local/share/flatpak/exports/share
 
       # Remove redundant/conflicting bindings
       bindkey -r "^[n"
