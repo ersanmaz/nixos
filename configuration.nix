@@ -326,9 +326,9 @@ in
     shellAliases = {
       nix-up = "sudo nixos-rebuild switch";
       nix-gc = "nix-collect-garbage -d";
-      useJava17 = "export JAVA_HOME=${pkgs.openjdk17}; export PATH=$JAVA_HOME/bin:$PATH";
-      useJava21 = "export JAVA_HOME=${pkgs.openjdk21}; export PATH=$JAVA_HOME/bin:$PATH";
-      useJava25 = "export JAVA_HOME=${pkgs.openjdk25}; export PATH=$JAVA_HOME/bin:$PATH";
+      j17 = "export JAVA_HOME=${pkgs.openjdk17}; export PATH=$JAVA_HOME/bin:$PATH";
+      j21 = "export JAVA_HOME=${pkgs.openjdk21}; export PATH=$JAVA_HOME/bin:$PATH";
+      j25 = "export JAVA_HOME=${pkgs.openjdk25}; export PATH=$JAVA_HOME/bin:$PATH";
     };
 
   };
