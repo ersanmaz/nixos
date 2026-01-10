@@ -23,6 +23,8 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
+  # Enable NTFS support
+  boot.supportedFilesystems = [ "ntfs" ];
 
   boot.loader.grub = {
     enable = true;
@@ -153,9 +155,9 @@ in
   # Enable flakes + new nix commands
   #nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "qtwebengine-5.15.19"
-  ];
+ # nixpkgs.config.permittedInsecurePackages = [
+ #   "qtwebengine-5.15.19"
+ # ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -188,9 +190,10 @@ in
     gnomeExtensions.system-monitor-next
     papirus-icon-theme
     vscode
-    jetbrains.idea-ultimate
+    jetbrains.idea
     google-chrome
-    stremio
+    ntfs3g
+    #stremio
     kubectl
     k9s
     helm
@@ -204,7 +207,7 @@ in
     htop
     jdks
     qpdfview
-    whatsie
+    #whatsie
     hypnotix
     vlc
     wl-clipboard
