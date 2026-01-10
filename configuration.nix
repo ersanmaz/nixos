@@ -6,11 +6,6 @@
 
 let
   user = "ersan";
-  jdk17 = pkgs.openjdk17;
-  jdks = pkgs.buildEnv {
-    name = "java-env";
-    paths = [ jdk17 ];
-  };
 in
 
 {
@@ -50,6 +45,16 @@ in
     echo "Pruning old system generations..."
     ${pkgs.nix}/bin/nix-env --profile /nix/var/nix/profiles/system --delete-generations +3 || true
   '';
+
+  # If using NixOS configuration.nix
+  system.activationScripts.jdk-links = {
+    text = ''
+      mkdir -p /home/ersan/.jdks
+      ln -sfn ${pkgs.openjdk17} /home/ersan/.jdks/openjdk17
+      ln -sfn ${pkgs.openjdk21} /home/ersan/.jdks/openjdk21
+      ln -sfn ${pkgs.openjdk25} /home/ersan/.jdks/openjdk25
+    '';
+  };
 
   nix.settings.keep-derivations = false;
   nix.settings.keep-outputs = false;
@@ -170,13 +175,6 @@ in
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # Enable flakes + new nix commands
-  #nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
- # nixpkgs.config.permittedInsecurePackages = [
- #   "qtwebengine-5.15.19"
- # ];
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -211,7 +209,6 @@ in
     jetbrains-toolbox
     google-chrome
     ntfs3g
-    #stremio
     kubectl
     k9s
     helm
@@ -223,15 +220,18 @@ in
     zip
     jq
     htop
-    jdks
-    qpdfview
+    #stremio
     #whatsie
+    qpdfview
     hypnotix
     vlc
     wl-clipboard
     flatpak
     podman-compose
     step-cli
+    openjdk25
+    openjdk21
+    openjdk17
   ];
 
   # Podman
@@ -326,6 +326,9 @@ in
     shellAliases = {
       nix-up = "sudo nixos-rebuild switch";
       nix-gc = "nix-collect-garbage -d";
+      useJava17 = "export JAVA_HOME=${pkgs.openjdk17}; export PATH=$JAVA_HOME/bin:$PATH";
+      useJava21 = "export JAVA_HOME=${pkgs.openjdk21}; export PATH=$JAVA_HOME/bin:$PATH";
+      useJava25 = "export JAVA_HOME=${pkgs.openjdk25}; export PATH=$JAVA_HOME/bin:$PATH";
     };
 
   };
