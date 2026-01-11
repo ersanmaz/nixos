@@ -214,7 +214,7 @@ in
     k9s
     helm
     fzf
-    fish
+    tmux
     zellij
     unzip
     gnutar
@@ -222,7 +222,7 @@ in
     jq
     htop
     #stremio
-    #whatsie
+    karere
     qpdfview
     hypnotix
     vlc
@@ -235,6 +235,7 @@ in
     openjdk17
     direnv
     nix-direnv
+    onlyoffice-desktopeditors
   ];
 
   # Podman
