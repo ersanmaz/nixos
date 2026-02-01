@@ -307,6 +307,11 @@ in
 
       bindkey "^I" complete-word
 
+      # It's for tmux home/end/del keys fix
+      bindkey "^[[H" beginning-of-line
+      bindkey "^[[F" end-of-line
+      bindkey "^[[3~" delete-char
+
       ###################################################
       # Fish-like TAB completion menu                   #
       ###################################################
@@ -338,6 +343,76 @@ in
       j25 = "export JAVA_HOME=${pkgs.openjdk25}; export PATH=$JAVA_HOME/bin:$PATH";
     };
 
+  };
+
+  # --- Vim Configuration ---
+  environment.etc."vimrc".text = ''
+    " General Interface
+    set mouse=a
+    set clipboard=unnamedplus
+    set termguicolors
+    set laststatus=2
+    set noshowmode
+    " Color Palette & Highlights
+    highlight Normal       guibg=NONE    guifg=#666666
+    highlight LineNr       guibg=NONE    guifg=#333333
+    highlight CursorLineNr guibg=NONE    guifg=#3a5e4f gui=bold
+    highlight VertSplit    guibg=NONE    guifg=#262626
+    highlight StatusLine   guibg=#3a5e4f guifg=#1a1a1a gui=bold
+    highlight StatusLineNC guibg=#262626 guifg=#444444 gui=none
+    " UI Elements
+    highlight Comment      guifg=#444444 gui=italic
+    highlight Constant     guifg=#888888
+    highlight Search       guibg=#3a5e4f guifg=#1a1a1a
+    highlight Visual       guibg=#3a5e4f guifg=#1a1a1a
+    highlight EndOfBuffer  guifg=#1a1a1a
+    " Custom Status Line
+    set statusline=
+    set statusline+=%#StatusLine#\ %f\
+    set statusline+=%#StatusLineNC#\ %y\
+    set statusline+=%=
+    set statusline+=%#StatusLineNC#\ %l/%L\
+  '';
+
+  # --- Tmux Configuration ---
+  programs.tmux = {
+    enable = true;
+    shortcut = "Space"; # Sets prefix to Ctrl-Space
+    keyMode = "vi";
+    terminal = "xterm-256color";
+    escapeTime = 0;
+    extraConfig = ''
+      # Split panes using Alt + v or Alt + h
+      bind -n M-v split-window -h -c "#{pane_current_path}"
+      bind -n M-h split-window -v -c "#{pane_current_path}"
+
+      # Switch panes using Alt + Arrow keys
+      bind -n M-Left  select-pane -L
+      bind -n M-Right select-pane -R
+      bind -n M-Up    select-pane -U
+      bind -n M-Down  select-pane -D
+
+      # Fix Home and End keys
+      bind-key -n Home send escape [H
+      bind-key -n End send escape [F
+
+      set -g mouse on
+      setw -g xterm-keys on
+      set -as terminal-overrides ",xterm*:Tc"
+
+      # --- Status Bar & Theme ---
+      set -g status-style bg=default,fg=#666666
+      set -g status-left-length 40
+      set -g status-left "#[fg=#3a5e4f,bold]#S #[fg=#333333,nobold]| "
+      set -g status-right "#[fg=#666666]%H:%M #[fg=#333333]| #[fg=#666666]%d-%b"
+
+      set -g window-status-format "#[fg=#444444] #I:#W "
+      set -g window-status-current-format "#[fg=#1a1a1a,bg=#3a5e4f,bold] #I:#W "
+
+      set -g pane-border-style fg=#262626
+      set -g pane-active-border-style fg=#3a5e4f
+      set -g message-style bg=#3a5e4f,fg=#1a1a1a
+    '';
   };
 
   system.userActivationScripts = {
